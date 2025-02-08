@@ -35,6 +35,12 @@
             font-weight: bold;
             color: #ff5722;
         }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-item span {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -45,20 +51,20 @@
     <script>
         function getDeviceInfo() {
             return {
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language,
-                cookieEnabled: navigator.cookieEnabled,
-                online: navigator.onLine,
-                javaEnabled: navigator.javaEnabled(),
-                screen: {
-                    width: screen.width,
-                    height: screen.height,
-                    colorDepth: screen.colorDepth
+                "ユーザーエージェント": navigator.userAgent,
+                "プラットフォーム": navigator.platform,
+                "言語": navigator.language,
+                "クッキー有効": navigator.cookieEnabled,
+                "オンライン": navigator.onLine,
+                "Java有効": navigator.javaEnabled(),
+                "スクリーン": {
+                    "幅": screen.width,
+                    "高さ": screen.height,
+                    "色深度": screen.colorDepth
                 },
-                window: {
-                    innerWidth: window.innerWidth,
-                    innerHeight: window.innerHeight
+                "ウィンドウ": {
+                    "内幅": window.innerWidth,
+                    "内高さ": window.innerHeight
                 }
             };
         }
@@ -66,7 +72,18 @@
         function displayDeviceInfo() {
             const info = getDeviceInfo();
             const infoDiv = document.getElementById('info');
-            infoDiv.innerHTML = '<pre>' + JSON.stringify(info, null, 2) + '</pre>';
+            infoDiv.innerHTML = '';
+
+            for (const [key, value] of Object.entries(info)) {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('info-item');
+                if (typeof value === 'object') {
+                    itemDiv.innerHTML = `<span>${key}:</span> <pre>${JSON.stringify(value, null, 2)}</pre>`;
+                } else {
+                    itemDiv.innerHTML = `<span>${key}:</span> ${value}`;
+                }
+                infoDiv.appendChild(itemDiv);
+            }
         }
 
         function calculateFPS() {
