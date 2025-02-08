@@ -16,7 +16,7 @@
             text-align: center;
             color: #4CAF50;
         }
-        #info, #fps {
+        #info, #fps, #ip-info {
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -47,6 +47,7 @@
     <h1>デバイス情報とFPS表示</h1>
     <div id="info"></div>
     <div id="fps"></div>
+    <div id="ip-info"></div>
 
     <script>
         function getDeviceInfo() {
@@ -110,9 +111,22 @@
 
             updateFPS();
         }
+        
+        async function fetchIpInfo() {
+            try {
+                const response = await fetch('https://ipinfo.io/json?token=46dd562417807b');
+                const data = await response.json();
+                const ipInfoDiv = document.getElementById('ip-info');
+                ipInfoDiv.innerHTML = `<div class="info-item"><span>IPアドレス:</span> ${data.ip}</div>`;
+                ipInfoDiv.innerHTML += `<div class="info-item"><span>住所:</span> ${data.city}, ${data.region}, ${data.country}</div>`;
+            } catch (error) {
+                console.error('IP情報の取得に失敗しました:', error);
+            }
+        }
 
         displayDeviceInfo();
         calculateFPS();
+        fetchIpInfo();
     </script>
 </body>
 </html>
