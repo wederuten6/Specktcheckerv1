@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>デバイス情報とFPS表示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #info {
+            margin: 20px;
+        }
+        #fps {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>デバイス情報とFPS表示</h1>
+    <div id="info"></div>
+    <div id="fps"></div>
+
+    <script>
+        function getDeviceInfo() {
+            return {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookieEnabled: navigator.cookieEnabled,
+                online: navigator.onLine,
+                javaEnabled: navigator.javaEnabled(),
+                screen: {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth
+                },
+                window: {
+                    innerWidth: window.innerWidth,
+                    innerHeight: window.innerHeight
+                }
+            };
+        }
+
+        function displayDeviceInfo() {
+            const info = getDeviceInfo();
+            const infoDiv = document.getElementById('info');
+            infoDiv.innerHTML = '<pre>' + JSON.stringify(info, null, 2) + '</pre>';
+        }
+
+        function calculateFPS() {
+            let lastFrameTime = performance.now();
+            let frameCount = 0;
+            let fps;
+
+            function updateFPS() {
+                const now = performance.now();
+                frameCount++;
+                const delta = now - lastFrameTime;
+
+                if (delta >= 1000) {
+                    fps = frameCount;
+                    frameCount = 0;
+                    lastFrameTime = now;
+
+                    const fpsDiv = document.getElementById('fps');
+                    fpsDiv.textContent = `FPS: ${fps}`;
+                }
+
+                requestAnimationFrame(updateFPS);
+            }
+
+            updateFPS();
+        }
+
+        displayDeviceInfo();
+        calculateFPS();
+    </script>
+</body>
+</html>
