@@ -16,7 +16,7 @@
             text-align: center;
             color: #4CAF50;
         }
-        #info, #fps, #ip-info {
+        #info, #fps, #ip-info, #speed-info {
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -48,6 +48,7 @@
     <div id="info"></div>
     <div id="fps"></div>
     <div id="ip-info"></div>
+    <div id="speed-info"></div>
 
     <script>
         function getDeviceInfo() {
@@ -124,9 +125,42 @@
             }
         }
 
+        function measureSpeed() {
+            const imageSrc = "https://www.google.com/images/phd/px.gif"; // 小さな画像をダウンロードして速度を測定
+            let startTime, endTime;
+
+            const downloadImage = () => {
+                startTime = (new Date()).getTime();
+                const img = new Image();
+                img.onload = () => {
+                    endTime = (new Date()).getTime();
+                    displaySpeed();
+                };
+                img.onerror = (err) => {
+                    console.error('速度テストに失敗しました:', err);
+                };
+                img.src = imageSrc + "?t=" + startTime;
+            };
+
+            const displaySpeed = () => {
+                const duration = (endTime - startTime) / 1000;
+                const bitsLoaded = 8 * 1024; // 画像のサイズ（1KB）をビット単位で
+                const speedBps = (bitsLoaded / duration).toFixed(2);
+                const speedKbps = (speedBps / 1024).toFixed(2);
+                const speedMbps = (speedKbps / 1024).toFixed(2);
+
+                const speedInfoDiv = document.getElementById('speed-info');
+                speedInfoDiv.innerHTML = `<div class="info-item"><span>インターネット速度:</span> ${speedMbps} Mbps</div>`;
+            };
+
+            downloadImage();
+            setInterval(downloadImage, 5000); // 5秒ごとに繰り返し
+        }
+
         displayDeviceInfo();
         calculateFPS();
         fetchIpInfo();
+        measureSpeed();
     </script>
 </body>
 </html>
